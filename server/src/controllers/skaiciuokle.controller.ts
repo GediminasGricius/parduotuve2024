@@ -11,4 +11,10 @@ export class SkaiciuokleController{
         });
 
    } 
+
+   static skaiciai(req:any, res:any){
+    res.json({
+        "skaicius":99
+    })
+   }
 }
