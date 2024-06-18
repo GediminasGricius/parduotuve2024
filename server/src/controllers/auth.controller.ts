@@ -2,6 +2,7 @@ import { pool } from "../db/connect";
 import bcrypt from "bcrypt";
 import { User } from "../models/user";
 import  jwt  from "jsonwebtoken";
+import dotenv from "dotenv";
 
 export class AuthController{
     
@@ -45,26 +46,31 @@ export class AuthController{
                 'text':'Įvestas neteisingas slaptažodis arba el. pašto adresas'
             });
         }
-
-        let token=jwt.sign(
-            {
-                id:user.id
-            },
-            "kk59444gsd4r9+-eyery64er94ty9wer49erh4",
-            {
-                expiresIn:'2 days'
+        if (process.env.TOKEN_SECRET!=null){
+            dotenv.config();
+            let token=jwt.sign(
+                {
+                    id:user.id,
+                    type:user.type
+                },
+                process.env.TOKEN_SECRET,
+                {
+                    expiresIn:'2 days'
+                });
+    
+    
+            //const k=jwt.verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzE4MjY0Njk3LCJleHAiOjE3MTg0Mzc0OTd9.2CXay21b6mJVcGTRK_MejAjP1f53jmjvx5wpGtqD_UU","kk59444gsd4r9+-eyery64er94ty9wer49erh4");    
+            //console.log(k);
+    
+            res.json({
+                'name':user.name,
+                'email':user.email,
+                'token':token,
+                'type':user.type
             });
+        }
 
-
-        //const k=jwt.verify("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzE4MjY0Njk3LCJleHAiOjE3MTg0Mzc0OTd9.2CXay21b6mJVcGTRK_MejAjP1f53jmjvx5wpGtqD_UU","kk59444gsd4r9+-eyery64er94ty9wer49erh4");    
-        //console.log(k);
-
-        res.json({
-            'name':user.name,
-            'email':user.email,
-            'token':token,
-            'type':user.type
-        });
+        
 
     }
 
