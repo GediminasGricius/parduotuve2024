@@ -1,4 +1,4 @@
-import { app } from "./app.js";
+import { app } from "./app";
 import  dotenv  from "dotenv";
 //Užkraunama .env biblioteka ir paimami kintamieji
 dotenv.config();
