@@ -1,6 +1,8 @@
+import path from "path";
 import { pool } from "../db/connect";
 import { User } from "../models/user";
 import bcrypt from "bcrypt";
+import  fs from 'fs';
 
 export class UserController{
     static async getAll(req:any, res:any){
@@ -57,6 +59,11 @@ export class UserController{
         }
 
         if (fileURL!=null){
+            //Pasiimame buvusią informaciją iš DB
+            const [oldUser]=await pool.query<User[]>("SELECT * FROM users WHERE id=?", [id]);
+            
+            //Ištriname failą
+            fs.unlinkSync(path.join('./img/'+oldUser[0].img.split('/').pop()));
             await pool.query("UPDATE users SET img=? WHERE id=? ",[
                 fileURL,
                 id
@@ -78,6 +85,7 @@ export class UserController{
             })
         }
 
+       
         await UserController.updateUserRecord(userId, req.body.email, req.body.name, req.body.password, req.body.type, null );
 
         
