@@ -10,7 +10,7 @@ export class OrderController{
 
        // await result.forEach(async (order,index)=>{
        for (let i=0; i<result.length; i++){
-            const sql2="SELECT product_id as productId, count FROM orders_products WHERE order_id=?";
+            const sql2="SELECT op.product_id as productId, op.count, p.name, p.price FROM orders_products op LEFT JOIN products p ON op.product_id=p.id WHERE order_id=?";
                 
             const [products]=await pool.query<ResultOrdersProducts[]>(sql2, [result[i].id]);
             result[i].products=products;
@@ -53,6 +53,17 @@ export class OrderController{
         });
         
         res.status(201).json({
+            "success":true
+        })
+    }
+
+    static async delete(req:any, res:any){
+        let sql="DELETE FROM orders_products WHERE order_id=?";
+        await pool.query(sql, [req.params.id]);
+
+        sql="DELETE FROM orders WHERE id=?";
+        await pool.query(sql, [req.params.id]);
+        res.json({
             "success":true
         })
     }

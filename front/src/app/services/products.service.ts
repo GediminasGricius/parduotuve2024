@@ -15,6 +15,10 @@ export class ProductsService {
     return this.http.get<Product[]>('http://localhost:4999/products/');
   }
 
+  public getFiltredProducts(filter:String){
+    return this.http.get<Product[]>('http://localhost:4999/products/filter/'+filter);
+  }
+
   public getProduct(id:number){
     return this.http.get<Product>('http://localhost:4999/products/'+id);
   }
